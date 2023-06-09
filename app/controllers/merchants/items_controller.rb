@@ -7,7 +7,7 @@ class Merchants::ItemsController < ApplicationController
   def show
     @item = Item.find(params[:id])
     @merchant = Merchant.find(@item.merchant_id)
-    @item_photo = PhotoBuilder.item_photo_info(@item.name)
+    # @item_photo = PhotoBuilder.item_photo_info(@item.name)
   end
 
   def edit

@@ -4,6 +4,7 @@ RSpec.describe Merchant, type: :model do
   context "relationships" do
     it { should have_many :items }
     it { should have_many(:invoice_items).through(:items) }
+    it { should have_many :coupons }
   end
 
   context "validations" do

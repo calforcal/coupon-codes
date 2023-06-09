@@ -56,11 +56,12 @@ RSpec.describe "Merchant Coupons New Page" do
   it "can display a form to create a new coupon for a specific merchant" do
     visit new_merchant_coupon_path(merchant_3)
 
-    fill_in(:name, with: "Almost Free")
-    fill_in(:code, with: "99OFF")
-    page.choose(0)
-    fill_in(:status, with: 0)
-    fill_in(:money_off, with: 99)
+    save_and_open_page
+    fill_in("Name:", with: "Almost Free")
+    fill_in("Code:", with: "99OFF")
+    choose(option: 0)
+    fill_in("Status", with: "activated")
+    fill_in("Money Off:", with: 99)
     click_button "Create Coupon"
 
     expect(current_path).to eq(merchant_coupons_path(merchant_3))

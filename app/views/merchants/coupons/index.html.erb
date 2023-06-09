@@ -7,6 +7,8 @@
   </ul>
 </nav>
 
+<%= link_to "Create a New Coupon", new_merchant_coupon_path(@merchant) %>
+
 <div class="active-coupons">
   <% @merchant.coupons.each do |coupon| %>
     <div class="coupon-<%= coupon.id %>-details">

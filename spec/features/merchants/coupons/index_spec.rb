@@ -54,27 +54,29 @@ RSpec.describe "Merchants Items Index" do
   let!(:coupon_3) { merchant_3.coupons.create!(name: "25% off", code: "GET25", percent_off: 25, status: 0) }
 
   it "displays all of the merchants coupons, their amount off and a link to their show page" do
-    visit merchant_items_path(merchant_3)
+    visit merchant_coupons_path(merchant_3)
+    save_and_open_page
+    within ".active-coupons" do
+      within ".coupon-#{coupon_1.id}-details" do
+        expect(page).to have_link("#{coupon_1.name}")
+        expect(page).to have_content("Code: #{coupon_1.code}")
+        expect(page).to have_content("Percent Off: #{coupon_1.percent_off}")
+        expect(page).to_not have_content("Dollar Off: #{coupon_1.dollar_off}")
+      end
 
-    within ".merchant-#{merchant_3.id}-active-coupons" do
-      expect(page).to have_link("#{coupon_1.name}")
-      expect(page).to have_link("#{coupon_2.name}")
-      expect(page).to have_link("#{coupon_3.name}")
+      within ".coupon-#{coupon_2.id}-details" do
+        expect(page).to have_link("#{coupon_2.name}")
+        expect(page).to have_content("Code: #{coupon_2.code}")
+        expect(page).to_not have_content("Percent Off: #{coupon_2.percent_off}")
+        expect(page).to have_content("Dollar Off: #{coupon_2.dollar_off}")
+      end
 
-      expect(page).to have_content("Name: #{coupon_1.name}")
-      expect(page).to have_content("Code: #{coupon_1.code}")
-      expect(page).to have_content("Percent Off: #{coupon_1.percent_off}")
-      expect(page).to_not have_content("Dollar Off: #{coupon_1.dollar_off}")
-      
-      expect(page).to have_content("Name: #{coupon_2.name}")
-      expect(page).to have_content("Code: #{coupon_2.code}")
-      expect(page).to_not have_content("Percent Off: #{coupon_2.percent_off}")
-      expect(page).to have_content("Dollar Off: #{coupon_2.dollar_off}")
-
-      expect(page).to have_content("Name: #{coupon_3.name}")
-      expect(page).to have_content("Code: #{coupon_3.code}")
-      expect(page).to have_content("Percent Off: #{coupon_3.percent_off}")
-      expect(page).to_not have_content("Dollar Off: #{coupon_3.dollar_off}")
+      within ".coupon-#{coupon_3.id}-details" do
+        expect(page).to have_link("#{coupon_3.name}")
+        expect(page).to have_content("Code: #{coupon_3.code}")
+        expect(page).to have_content("Percent Off: #{coupon_3.percent_off}")
+        expect(page).to_not have_content("Dollar Off: #{coupon_3.dollar_off}")
+      end
     end
   end
 end

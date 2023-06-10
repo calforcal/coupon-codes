@@ -28,12 +28,12 @@ RSpec.describe "Merchants Coupon Show Page" do
     let!(:transaction_6) { create(:transaction, invoice_id: invoice_6.id, result: 0) }
     let!(:transaction_7) { create(:transaction, invoice_id: invoice_6.id, result: 0) }
   
-    let!(:invoice_1) { create(:invoice, customer_id: customer_1.id, status: 0, coupon_id: coupon_1.id)}
-    let!(:invoice_2) { create(:invoice, customer_id: customer_2.id, status: 0, coupon_id: coupon_1.id)}
-    let!(:invoice_3) { create(:invoice, customer_id: customer_3.id, status: 0, coupon_id: coupon_1.id)}
-    let!(:invoice_4) { create(:invoice, customer_id: customer_4.id, status: 0, coupon_id: coupon_1.id)}
-    let!(:invoice_5) { create(:invoice, customer_id: customer_5.id, status: 0, coupon_id: coupon_1.id)}
-    let!(:invoice_6) { create(:invoice, customer_id: customer_5.id, status: 0)}
+    let!(:invoice_1) { create(:invoice, customer_id: customer_1.id, status: 1, coupon_id: coupon_1.id)}
+    let!(:invoice_2) { create(:invoice, customer_id: customer_2.id, status: 1, coupon_id: coupon_1.id)}
+    let!(:invoice_3) { create(:invoice, customer_id: customer_3.id, status: 1, coupon_id: coupon_1.id)}
+    let!(:invoice_4) { create(:invoice, customer_id: customer_4.id, status: 1, coupon_id: coupon_1.id)}
+    let!(:invoice_5) { create(:invoice, customer_id: customer_5.id, status: 1, coupon_id: coupon_1.id)}
+    let!(:invoice_6) { create(:invoice, customer_id: customer_5.id, status: 2, coupon_id: coupon_2.id)}
   
     let!(:invoice_item_1) { create(:invoice_item, unit_price: 2000, invoice_id: invoice_1.id, item_id: item_1.id) }
     let!(:invoice_item_2) { create(:invoice_item, unit_price: 3000, invoice_id: invoice_2.id, item_id: item_2.id) }
@@ -62,6 +62,43 @@ RSpec.describe "Merchants Coupon Show Page" do
       expect(page).to have_content("Percent Off: #{coupon_1.money_off}")
       expect(page).to have_content("Status: #{coupon_1.status}")
       expect(page).to have_content("Number of Uses: 5")
+    end
+
+    it "displays a button to deactivate the coupon, and update its status" do
+      visit merchant_coupon_path(merchant_1, coupon_1)
+
+      expect(page).to have_content("#{coupon_1.name}")
+      expect(page).to have_content("Code: #{coupon_1.code}")
+      expect(page).to have_content("Percent Off: #{coupon_1.money_off}")
+      expect(page).to have_content("Status: #{coupon_1.status}")
+      expect(page).to have_content("Number of Uses: 5")
+      expect(page).to have_button("Deactivate Coupon")
+
+      click_button "Deactivate Coupon"
+
+      expect(current_path).to eq(merchant_coupon_path(merchant_1, coupon_1))
+      expect(page).to have_content("#{coupon_1.name}")
+      expect(page).to have_content("Code: #{coupon_1.code}")
+      expect(page).to have_content("Percent Off: #{coupon_1.money_off}")
+      expect(page).to have_content("Status: deactivated")
+      expect(page).to have_content("Number of Uses: #{coupon_1.times_used}")
+    end
+
+    it "cannot be deactivated if there are pending invoices for the coupon" do
+      visit merchant_coupon_path(merchant_1, coupon_2)
+
+      expect(page).to have_content("#{coupon_2.name}")
+      expect(page).to have_content("Code: #{coupon_2.code}")
+      expect(page).to have_content("Dollars Off: #{coupon_2.money_off}")
+      expect(page).to have_content("Status: #{coupon_2.status}")
+      expect(page).to have_content("Number of Uses: #{coupon_2.times_used}")
+      expect(page).to have_button("Deactivate Coupon")
+
+      click_button "Deactivate Coupon"
+
+      expect(current_path).to eq(merchant_coupon_path(merchant_1, coupon_2))
+
+      expect(page).to have_content("Coupon cannot be deactivated with invoices pending")
     end
   end
 end

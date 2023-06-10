@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :merchants do 
     resources :items , only: [:index, :show, :new, :create, :edit, :update], controller: "merchants/items"
     resources :invoices , only: [:index, :show], controller: "merchants/invoices"
-    resources :coupons, only: [:index, :new, :create, :show], controller: "merchants/coupons"
+    resources :coupons, only: [:index, :new, :create, :show, :update], controller: "merchants/coupons"
   end
 
   # get "/merchants/:id/items", to: "merchants/items#index"

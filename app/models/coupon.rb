@@ -8,6 +8,10 @@ class Coupon < ApplicationRecord
   enum coupon_type: ["percent", "dollars"] # percent = 0, dollars = 1
 
   def times_used
-    invoices.joins(:transactions).count('transactions.result = 0')
+    invoices.joins(:transactions).where("transactions.result = 0").count
+  end
+
+  def pending_invoices?
+    invoices.where("invoices.status = 2").any?
   end
 end

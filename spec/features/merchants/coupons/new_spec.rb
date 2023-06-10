@@ -56,7 +56,6 @@ RSpec.describe "Merchant Coupons New Page" do
   it "can display a form to create a new coupon for a specific merchant" do
     visit new_merchant_coupon_path(merchant_3)
 
-    save_and_open_page
     fill_in("Name:", with: "Almost Free")
     fill_in("Code:", with: "99OFF")
     page.select "activated", from: "Status:"

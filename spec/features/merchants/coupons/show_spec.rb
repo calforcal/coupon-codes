@@ -1,10 +1,7 @@
 require "rails_helper"
 
-RSpec.describe Coupon, type: :model do
-  it { should belong_to :merchant }
-  it { should have_many :invoices }
-
-  describe "methods" do
+RSpec.describe "Merchants Coupon Show Page" do
+  describe "merchants/:id/coupons/:id" do
     let!(:merchant_1) { create(:merchant) }
     let!(:merchant_2) { create(:merchant) }
   
@@ -55,10 +52,16 @@ RSpec.describe Coupon, type: :model do
   
     let!(:coupon_1) { merchant_1.coupons.create!(name: "50% off", code: "GET50", coupon_type: 0, status: 0, money_off: 50) }
     let!(:coupon_2) { merchant_1.coupons.create!(name: "$10 off", code: "TAKE10", coupon_type: 1, status: 0, money_off: 10) }
+    let!(:coupon_3) { merchant_1.coupons.create!(name: "25% off", code: "GET25", coupon_type: 0, status: 0, money_off: 25) }
 
-    it "can count the number of time the coupons been used" do
-      expect(coupon_1.times_used).to eq(5)
-      expect(coupon_2.times_used).to eq(0)
+    it "displays a coupons information and count of times used" do
+      visit merchant_coupon_path(merchant_1, coupon_1)
+
+      expect(page).to have_content("#{coupon.name}")
+      expect(page).to have_content("Code: #{coupon.code}")
+      expect(page).to have_content("Percent Off: #{coupon.money_off}")
+      expect(page).to have_content("Status: #{coupon.status}")
+      expect(page).to have_content("Number of Uses: 5")
     end
   end
 end

@@ -33,7 +33,6 @@ RSpec.describe "/merchants/:id/items/new" do
         expect(current_path).to eq(new_merchant_item_path(merchant_1))
         expect(page).to have_content("Please fill out all fields")
       end
-      
     end
   end
 end

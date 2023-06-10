@@ -59,8 +59,8 @@ RSpec.describe "Merchant Coupons New Page" do
     save_and_open_page
     fill_in("Name:", with: "Almost Free")
     fill_in("Code:", with: "99OFF")
-    choose(option: 0)
-    fill_in("Status", with: "activated")
+    page.select "activated", from: "Status:"
+    page.select "percent", from: "Coupon Type:"
     fill_in("Money Off:", with: 99)
     click_button "Create Coupon"
 

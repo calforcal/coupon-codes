@@ -14,14 +14,11 @@
   <%= form.label :code, "Code:" %>
   <%= form.text_field :code %></br>
 
-  <%= form.label :status, "Status:" %>
-  <%= form.text_field :status %></br>
-  
+  <%= form.label :status, "Status:" %></br>
+  <%= form.select :status, ["activated", "deactivated"] %></br>
+
   <%= form.label :coupon_type, "Coupon Type:" %></br>
-  <%= form.radio_button :coupon_type, 0 %>
-  <%= form.label :coupon_type, "Percentage" %></br>
-  <%= form.radio_button :coupon_type, 1 %>
-  <%= form.label :coupon_type, "Dollars" %></br>
+  <%= form.select :coupon_type, ["percent", "dollars"] %></br>
 
   <%= form.label :money_off, "Money Off:" %>
   <%= form.number_field :money_off, max: 10000000000 %></br>

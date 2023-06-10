@@ -11,12 +11,20 @@ class Merchants::CouponsController < ApplicationController
 
   def create
     merchant = Merchant.find(params[:merchant_id])
-    coupon = merchant.coupons.new(coupon_params)
-    if coupon.save
-      redirect_to merchant_coupons_path(merchant)
-    else
+    if merchant.total_active_coupons < 5
+      coupon = merchant.coupons.new(coupon_params)
+      if coupon.save
+        redirect_to merchant_coupons_path(merchant)
+      elsif coupon.code == Coupon.find_by(code: coupon.code).code
+        redirect_to new_merchant_coupon_path(merchant)
+        flash[:alert] = "Code already is use"
+      else
+        redirect_to new_merchant_coupon_path(merchant)
+        flash[:alert] = "Please fill out all fields"
+      end
+    elsif merchant.total_active_coupons >= 5
       redirect_to new_merchant_coupon_path(merchant)
-      flash[:alert] = "Please fill out all fields"
+      flash[:alert] = "Too many active coupons. Please deactivate a current one, or set this one to deactivated."
     end
   end
 

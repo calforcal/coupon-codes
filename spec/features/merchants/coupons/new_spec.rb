@@ -52,11 +52,11 @@ RSpec.describe "Merchant Coupons New Page" do
   let!(:coupon_1) { merchant_3.coupons.create!(name: "50% off", code: "GET50", coupon_type: 0, status: 0, money_off: 50) }
   let!(:coupon_2) { merchant_3.coupons.create!(name: "$10 off", code: "TAKE10", coupon_type: 1, status: 0, money_off: 10) }
   let!(:coupon_3) { merchant_3.coupons.create!(name: "25% off", code: "GET25", coupon_type: 0, status: 0, money_off: 25) }
+  let!(:coupon_4) { merchant_3.coupons.create!(name: "$1 off", code: "1OFF", coupon_type: 1, status: 0, money_off: 25) }
 
   it "can display a form to create a new coupon for a specific merchant" do
     visit new_merchant_coupon_path(merchant_3)
 
-    save_and_open_page
     fill_in("Name:", with: "Almost Free")
     fill_in("Code:", with: "99OFF")
     page.select "activated", from: "Status:"
@@ -70,5 +70,34 @@ RSpec.describe "Merchant Coupons New Page" do
     expect(page).to have_content("Code: 99OFF")
     expect(page).to have_content("Percent Off: 99")
     expect(page).to have_content("Status: activated")
+  end
+
+  it "will flash an error message if 5 coupons are already activated" do
+    coupon_5 = merchant_3.coupons.create!(name: "$2 off", code: "2OFF", coupon_type: 1, status: 0, money_off: 25)
+
+    visit new_merchant_coupon_path(merchant_3)
+    fill_in("Name:", with: "Almost Free")
+    fill_in("Code:", with: "99OFF")
+    page.select "activated", from: "Status:"
+    page.select "percent", from: "Coupon Type:"
+    fill_in("Money Off:", with: 99)
+    click_button "Create Coupon"
+
+    expect(current_path).to eq(new_merchant_coupon_path(merchant_3))
+    expect(page).to have_content("Too many active coupons. Please deactivate a current one, or set this one to deactivated.")
+  end
+
+  it "will flash an error if a coupon code is already taken" do
+    visit new_merchant_coupon_path(merchant_3)
+
+    fill_in("Name:", with: "1 Dolla")
+    fill_in("Code:", with: "1OFF")
+    page.select "activated", from: "Status:"
+    page.select "dollars", from: "Coupon Type:"
+    fill_in("Money Off:", with: 1)
+    click_button "Create Coupon"
+
+    expect(current_path).to eq(new_merchant_coupon_path(merchant_3))
+    expect(page).to have_content("Code already is use")
   end
 end

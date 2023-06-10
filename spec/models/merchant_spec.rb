@@ -208,6 +208,10 @@ RSpec.describe Merchant, type: :model do
     let!(:transaction_7) { create(:transaction, invoice_id: invoice_7.id, result: 0) }
     let!(:transaction_8) { create(:transaction, invoice_id: invoice_8.id, result: 1) }
 
+    let!(:coupon_1) { @merchant_3.coupons.create!(name: "50% off", code: "GET50", coupon_type: 0, status: 0, money_off: 50) }
+    let!(:coupon_2) { @merchant_3.coupons.create!(name: "$10 off", code: "TAKE10", coupon_type: 1, status: 0, money_off: 10) }
+    let!(:coupon_3) { @merchant_3.coupons.create!(name: "25% off", code: "GET25", coupon_type: 0, status: 0, money_off: 25) }
+
     describe "#top_5_customers" do
       it "merchant can find number of successfull customer transactions" do
         have = [customer_2, customer_4, customer_1, customer_3, customer_5]
@@ -219,6 +223,12 @@ RSpec.describe Merchant, type: :model do
     describe "#unique_invoices" do
       it "merchant can find number of unique invoices" do
         expect(@merchant_4.unique_invoices.count).to eq(6)
+      end
+    end
+
+    describe "#total_active_coupons" do
+      it "returns the total number of active coupons for a merchant" do
+        expect(@merchant_3.total_active_coupons).to eq(3)
       end
     end
   end

@@ -1,0 +1,19 @@
+<h2><%= @coupon.name %></h2>
+<nav>
+  <ul>
+    <li><%= link_to 'Dashboard', "/merchants/#{@merchant.id}" %></li>
+    <li><%= link_to 'My items', merchant_items_path((@merchant)) %></li>
+    <li><%= link_to 'My invoices', merchant_invoices_path((@merchant)) %></li>
+  </ul>
+</nav>
+
+<div class="coupon-<%= @coupon.id %>-details">
+  <p>Code: <%= @coupon.code %></p>
+  <% if @coupon.coupon_type == "percent" %>
+    <%= "Percent Off: #{@coupon.money_off}" %>
+  <% elsif @coupon.coupon_type == "dollars" %>
+    <%= "Dollar Off: #{@coupon.money_off}" %>
+  <% end %>
+  <p>Status: <%= @coupon.status %></p>
+  <p>Number of Uses: <%= @coupon.times_used %></p>
+</div>

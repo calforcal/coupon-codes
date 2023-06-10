@@ -1,0 +1,27 @@
+<h2>New Coupon</h2>
+<nav>
+  <ul>
+    <li><%= link_to 'Dashboard', "/merchants/#{@merchant.id}" %></li>
+    <li><%= link_to 'My items', merchant_items_path((@merchant)) %></li>
+    <li><%= link_to 'My invoices', merchant_invoices_path((@merchant)) %></li>
+  </ul>
+</nav>
+
+<%= form_with model: @coupon, url: merchant_coupons_path(@merchant), method: :post, local: true do |form| %>
+  <%= form.label :name, "Name:" %>
+  <%= form.text_field :name %></br>
+  
+  <%= form.label :code, "Code:" %>
+  <%= form.text_field :code %></br>
+
+  <%= form.label :status, "Status:" %></br>
+  <%= form.select :status, ["activated", "deactivated"] %></br>
+
+  <%= form.label :coupon_type, "Coupon Type:" %></br>
+  <%= form.select :coupon_type, ["percent", "dollars"] %></br>
+
+  <%= form.label :money_off, "Money Off:" %>
+  <%= form.number_field :money_off, max: 10000000000 %></br>
+
+  <%= form.submit "Create Coupon" %></br>
+<% end %>

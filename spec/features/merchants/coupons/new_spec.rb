@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe "Merchants Items Index" do
+RSpec.describe "Merchant Coupons New Page" do
   let!(:merchant_1) { create(:merchant) }
   let!(:merchant_2) { create(:merchant) }
 
@@ -53,40 +53,22 @@ RSpec.describe "Merchants Items Index" do
   let!(:coupon_2) { merchant_3.coupons.create!(name: "$10 off", code: "TAKE10", coupon_type: 1, status: 0, money_off: 10) }
   let!(:coupon_3) { merchant_3.coupons.create!(name: "25% off", code: "GET25", coupon_type: 0, status: 0, money_off: 25) }
 
-  it "displays all of the merchants coupons, their amount off and a link to their show page" do
-    visit merchant_coupons_path(merchant_3)
+  it "can display a form to create a new coupon for a specific merchant" do
+    visit new_merchant_coupon_path(merchant_3)
 
-    within ".active-coupons" do
-      within ".coupon-#{coupon_1.id}-details" do
-        expect(page).to have_link("#{coupon_1.name}")
-        expect(page).to have_content("Code: #{coupon_1.code}")
-        expect(page).to have_content("Percent Off: #{coupon_1.money_off}")
-        expect(page).to_not have_content("Dollar Off: #{coupon_1.money_off}")
-      end
+    save_and_open_page
+    fill_in("Name:", with: "Almost Free")
+    fill_in("Code:", with: "99OFF")
+    page.select "activated", from: "Status:"
+    page.select "percent", from: "Coupon Type:"
+    fill_in("Money Off:", with: 99)
+    click_button "Create Coupon"
 
-      within ".coupon-#{coupon_2.id}-details" do
-        expect(page).to have_link("#{coupon_2.name}")
-        expect(page).to have_content("Code: #{coupon_2.code}")
-        expect(page).to_not have_content("Percent Off: #{coupon_2.money_off}")
-        expect(page).to have_content("Dollar Off: #{coupon_2.money_off}")
-      end
+    expect(current_path).to eq(merchant_coupons_path(merchant_3))
 
-      within ".coupon-#{coupon_3.id}-details" do
-        expect(page).to have_link("#{coupon_3.name}")
-        expect(page).to have_content("Code: #{coupon_3.code}")
-        expect(page).to have_content("Percent Off: #{coupon_3.money_off}")
-        expect(page).to_not have_content("Dollar Off: #{coupon_3.money_off}")
-      end
-    end
-  end
-
-  it "displays a link to create a new coupon" do
-    visit merchant_coupons_path(merchant_3)
-
-    expect(page).to have_link("Create a New Coupon")
-
-    click_link("Create a New Coupon")
-
-    expect(current_path).to eq(new_merchant_coupon_path(merchant_3))
+    expect(page).to have_content("Almost Free")
+    expect(page).to have_content("Code: 99OFF")
+    expect(page).to have_content("Percent Off: 99")
+    expect(page).to have_content("Status: activated")
   end
 end

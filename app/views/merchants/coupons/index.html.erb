@@ -7,15 +7,17 @@
   </ul>
 </nav>
 
+<%= link_to "Create a New Coupon", new_merchant_coupon_path(@merchant) %>
+
 <div class="active-coupons">
   <% @merchant.coupons.each do |coupon| %>
     <div class="coupon-<%= coupon.id %>-details">
       <h3><%= link_to coupon.name, merchant_coupons_path(@merchant, coupon) %></h3>
       <p>Code: <%= coupon.code %></p>
-      <% if coupon.dollar_off.nil? %>
-        <%= "Percent Off: #{coupon.percent_off}" %>
-      <% elsif coupon.percent_off.nil? %>
-        <%= "Dollar Off: #{coupon.dollar_off}" %>
+      <% if coupon.coupon_type == "percent" %>
+        <%= "Percent Off: #{coupon.money_off}" %>
+      <% elsif coupon.coupon_type == "dollars" %>
+        <%= "Dollar Off: #{coupon.money_off}" %>
       <% end %>
       <p>Status: <%= coupon.status %></p>
     </div>

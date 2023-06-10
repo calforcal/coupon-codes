@@ -90,7 +90,7 @@ RSpec.describe "Merchants Coupon Show Page" do
       expect(page).to have_content("#{coupon_2.name}")
       expect(page).to have_content("Code: #{coupon_2.code}")
       expect(page).to have_content("Dollars Off: #{coupon_2.money_off}")
-      expect(page).to have_content("Status: #{coupon_2.status}")
+      expect(page).to have_content("Status: activated")
       expect(page).to have_content("Number of Uses: #{coupon_2.times_used}")
       expect(page).to have_button("Deactivate Coupon")
 

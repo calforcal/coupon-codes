@@ -9,6 +9,25 @@ class Merchants::CouponsController < ApplicationController
     @coupon = Coupon.find(params[:id])
   end
 
+  def update
+    @merchant = Merchant.find(params[:merchant_id])
+    @coupon = Coupon.find(params[:id])
+
+    if @coupon.pending_invoices?
+      redirect_to merchant_coupon_path(@merchant, @coupon)
+      flash[:alert] = "Coupon cannot be deactivated with invoices pending"
+    elsif params[:status] == "1"
+      @coupon.update(status: 1)
+      redirect_to merchant_coupon_path(@merchant, @coupon)
+    elsif params[:status] == "0"
+      @coupon.update(status: 0)
+      redirect_to merchant_coupon_path(@merchant, @coupon)
+    elsif @coupon.update(coupon_params)
+      redirect_to merchant_coupon_path(@merchant, @coupon)
+      flash[:notice] = "Coupon #{@coupon.id} has been successfully updated"
+    end
+  end
+
   def new
     @coupon = Coupon.new
     @merchant = Merchant.find(params[:merchant_id])

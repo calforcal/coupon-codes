@@ -12,8 +12,10 @@
   <% if @coupon.coupon_type == "percent" %>
     <%= "Percent Off: #{@coupon.money_off}" %>
   <% elsif @coupon.coupon_type == "dollars" %>
-    <%= "Dollar Off: #{@coupon.money_off}" %>
+    <%= "Dollars Off: #{@coupon.money_off}" %>
   <% end %>
   <p>Status: <%= @coupon.status %></p>
   <p>Number of Uses: <%= @coupon.times_used %></p>
+
+  <%= button_to "Deactivate Coupon", merchant_coupon_path(@merchant, @coupon, status: 1), method: :patch %>
 </div>

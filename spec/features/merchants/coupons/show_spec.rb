@@ -57,10 +57,10 @@ RSpec.describe "Merchants Coupon Show Page" do
     it "displays a coupons information and count of times used" do
       visit merchant_coupon_path(merchant_1, coupon_1)
 
-      expect(page).to have_content("#{coupon.name}")
-      expect(page).to have_content("Code: #{coupon.code}")
-      expect(page).to have_content("Percent Off: #{coupon.money_off}")
-      expect(page).to have_content("Status: #{coupon.status}")
+      expect(page).to have_content("#{coupon_1.name}")
+      expect(page).to have_content("Code: #{coupon_1.code}")
+      expect(page).to have_content("Percent Off: #{coupon_1.money_off}")
+      expect(page).to have_content("Status: #{coupon_1.status}")
       expect(page).to have_content("Number of Uses: 5")
     end
   end

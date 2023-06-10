@@ -7,12 +7,13 @@ class Merchant < ApplicationRecord
   has_many :coupons
 
   validates_presence_of :name
-
+  
+  enum status: ["enabled", "disabled"] # enabled = 0, disabled = 1
+  
   def top_5_customers
     customers.joins(:transactions).select("customers.*, COUNT(transactions.id) as transaction_count").where(transactions: {result: "success"}).group("customers.id").order("transaction_count DESC").limit(5)
   end
 
-  enum status: ["enabled", "disabled"] # enabled = 0, disabled = 1
 
   def self.filter_enabled
     Merchant.where(status: "enabled")

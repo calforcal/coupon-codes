@@ -143,6 +143,16 @@ RSpec.describe "/merchants/:id/dashboard" do
 
         expect("#{invoice_8.id}").to appear_before("#{invoice_7.id}")
       end
+
+      it "displays a link to view all of this merchants coupons" do
+        visit merchant_path(merchant_3)
+
+        expect(page).to have_link("My Coupons")
+
+        click_link("My Coupons")
+
+        expect(current_path).to eq(merchant_coupons_path(merchant_3))
+      end
     end
   end
 end

@@ -53,6 +53,7 @@ RSpec.describe "Merchants Coupon Show Page" do
     let!(:coupon_1) { merchant_1.coupons.create!(name: "50% off", code: "GET50", coupon_type: 0, status: 0, money_off: 50) }
     let!(:coupon_2) { merchant_1.coupons.create!(name: "$10 off", code: "TAKE10", coupon_type: 1, status: 0, money_off: 10) }
     let!(:coupon_3) { merchant_1.coupons.create!(name: "25% off", code: "GET25", coupon_type: 0, status: 0, money_off: 25) }
+    let!(:coupon_4) { merchant_1.coupons.create!(name: "$100 off", code: "1HUNNIT", coupon_type: 0, status: 1, money_off: 100) }
 
     it "displays a coupons information and count of times used" do
       visit merchant_coupon_path(merchant_1, coupon_1)
@@ -82,6 +83,26 @@ RSpec.describe "Merchants Coupon Show Page" do
       expect(page).to have_content("Percent Off: #{coupon_1.money_off}")
       expect(page).to have_content("Status: deactivated")
       expect(page).to have_content("Number of Uses: #{coupon_1.times_used}")
+    end
+
+    it "displays a button to Activate the coupon, and update its status" do
+      visit merchant_coupon_path(merchant_1, coupon_4)
+
+      expect(page).to have_content("#{coupon_4.name}")
+      expect(page).to have_content("Code: #{coupon_4.code}")
+      expect(page).to have_content("Percent Off: #{coupon_4.money_off}")
+      expect(page).to have_content("Status: deactivated")
+      expect(page).to have_content("Number of Uses: #{coupon_4.times_used}")
+      expect(page).to have_button("Activate Coupon")
+
+      click_button "Activate Coupon"
+
+      expect(current_path).to eq(merchant_coupon_path(merchant_1, coupon_4))
+      expect(page).to have_content("#{coupon_4.name}")
+      expect(page).to have_content("Code: #{coupon_4.code}")
+      expect(page).to have_content("Percent Off: #{coupon_4.money_off}")
+      expect(page).to have_content("Status: activated")
+      expect(page).to have_content("Number of Uses: #{coupon_4.times_used}")
     end
 
     it "cannot be deactivated if there are pending invoices for the coupon" do

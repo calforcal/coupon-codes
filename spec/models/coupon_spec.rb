@@ -55,6 +55,7 @@ RSpec.describe Coupon, type: :model do
   
     let!(:coupon_1) { merchant_1.coupons.create!(name: "50% off", code: "GET50", coupon_type: 0, status: 0, money_off: 50) }
     let!(:coupon_2) { merchant_1.coupons.create!(name: "$10 off", code: "TAKE10", coupon_type: 1, status: 0, money_off: 10) }
+    let!(:coupon_3) { merchant_1.coupons.create!(name: "$20 off", code: "TOOCHEAP", coupon_type: 1, status: 1, money_off: 20) }
 
     it "can count the number of time the coupons been used" do
       expect(coupon_1.times_used).to eq(5)
@@ -64,6 +65,22 @@ RSpec.describe Coupon, type: :model do
     it "can determine if there are pending invoices for a coupon" do
       expect(coupon_1.pending_invoices?).to be(false)
       expect(coupon_2.pending_invoices?).to be(true)
+    end
+
+    it "can return only the activated coupons" do
+      original = [coupon_1, coupon_2, coupon_3]
+      expected = [coupon_1, coupon_2]
+
+      expect(Coupon.all).to eq(original)
+      expect(merchant_1.coupons.activated_coupons).to eq(expected)
+    end
+
+    it "can return only the deactivated coupons" do
+      original = [coupon_1, coupon_2, coupon_3]
+      expected = [coupon_3]
+
+      expect(Coupon.all).to eq(original)
+      expect(merchant_1.coupons.deactivated_coupons).to eq(expected)
     end
   end
 end

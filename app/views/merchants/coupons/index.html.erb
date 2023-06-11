@@ -4,15 +4,33 @@
     <li><%= link_to 'Dashboard', "/merchants/#{@merchant.id}" %></li>
     <li><%= link_to 'My items', merchant_items_path((@merchant)) %></li>
     <li><%= link_to 'My invoices', merchant_invoices_path((@merchant)) %></li>
+    <li><%= link_to 'My Coupons', merchant_coupons_path((@merchant)) %></li>
   </ul>
 </nav>
 
 <%= link_to "Create a New Coupon", new_merchant_coupon_path(@merchant) %>
 
 <div class="active-coupons">
-  <% @merchant.coupons.each do |coupon| %>
+  <h2>Activated Coupons</h2>
+  <% @merchant.coupons.activated_coupons.each do |coupon| %>
     <div class="coupon-<%= coupon.id %>-details">
-      <h3><%= link_to coupon.name, merchant_coupons_path(@merchant, coupon) %></h3>
+      <h3><%= link_to coupon.name, merchant_coupon_path(@merchant, coupon) %></h3>
+      <p>Code: <%= coupon.code %></p>
+      <% if coupon.coupon_type == "percent" %>
+        <%= "Percent Off: #{coupon.money_off}" %>
+      <% elsif coupon.coupon_type == "dollars" %>
+        <%= "Dollar Off: #{coupon.money_off}" %>
+      <% end %>
+      <p>Status: <%= coupon.status %></p>
+    </div>
+  <% end %>
+</div>
+
+<div class="deactivated-coupons">
+  <h2>Deactivated Coupons</h2>
+  <% @merchant.coupons.deactivated_coupons.each do |coupon| %>
+    <div class="coupon-<%= coupon.id %>-details">
+      <h3><%= link_to coupon.name, merchant_coupon_path(@merchant, coupon) %></h3>
       <p>Code: <%= coupon.code %></p>
       <% if coupon.coupon_type == "percent" %>
         <%= "Percent Off: #{coupon.money_off}" %>

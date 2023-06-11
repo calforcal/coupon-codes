@@ -9,8 +9,10 @@ RSpec.describe "Admin Invoices Show Page" do
     @merchant_1 = create(:merchant)
     @merchant_2 = create(:merchant)
 
+    @coupon_1 = @merchant_1.coupons.create!(name: "50% off", code: "GET50", coupon_type: 0, status: 0, money_off: 50)
+
     @invoice_1 = create(:invoice, customer_id: @customer1.id)
-    @invoice_2 = create(:invoice, customer_id: @customer2.id)
+    @invoice_2 = create(:invoice, customer_id: @customer2.id, coupon_id: @coupon_1.id)
 
     @item_1 = create(:item, merchant_id: @merchant_1.id)
     @item_2 = create(:item, merchant_id: @merchant_1.id)
@@ -86,6 +88,18 @@ RSpec.describe "Admin Invoices Show Page" do
 
       within("#invoice_info") do
         expect(page).to have_content("Revenue: $#{sprintf('%.2f', @invoice_2.revenue)}")
+      end
+    end
+
+    it "displays the subtotal, grand total and the name / code of coupon used (as a link)" do
+      visit admin_invoice_path(@invoice_2)
+
+      within ".payment-info" do
+        expect(page).to have_content("Subtotal: $#{sprintf('%.2f', @invoice_2.revenue)}")
+        expect(page).to have_content("Grand Total: $#{sprintf('%.2f', @invoice_2.grand_total)}")
+        expect(page).to have_content("Coupon Used:")
+        expect(page).to have_link("#{@coupon_1.name}")
+        expect(page).to have_content("Coupon Code: #{@coupon_1.code}")
       end
     end
 

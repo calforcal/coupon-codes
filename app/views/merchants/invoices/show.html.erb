@@ -6,6 +6,7 @@
       <li><%= link_to 'Dashboard', "/merchants/#{@merchant.id}" %></li>
       <li><%= link_to 'My items', merchant_items_path((@merchant)) %></li>
       <li><%= link_to 'My invoices', merchant_invoices_path((@merchant)) %></li>
+      <li><%= link_to "My Coupons", merchant_coupons_path(@merchant) %></li>
     </ul>
   </nav>
 </section>
@@ -40,3 +41,18 @@
       </tr>
     </section>
   <% end %>
+
+  <div class="payment-info">
+    <h3>Subtotal: <%= number_to_currency(@invoice.revenue, unit: "$", separator: ".", delimiter: "") %></h2>
+    <% if @invoice.coupon_id != nil %>
+      <h4>Coupon Used:</h4>
+      <h5>Coupon Name: <%= link_to @coupon.name, merchant_coupon_path(@merchant, @coupon) %></h5>
+      <h5>Coupon Code: <%= @coupon.code %></h5>
+      <h3>Grand Total: <%= number_to_currency(@invoice.grand_total, unit: "$", separator: ".", delimiter: "") %></h3>
+    <% else %>
+      <h4>Coupon Used: </h4>
+      <h5>Coupon Name: </h5>
+      <h5>Coupon Code: </h5>
+      <h3>Grand Total: <%= number_to_currency(@invoice.revenue, unit: "$", separator: ".", delimiter: "") %></h3>
+    <% end %>
+  </div>

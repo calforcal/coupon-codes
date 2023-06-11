@@ -4,12 +4,10 @@
     <li><%= link_to 'Dashboard', "/merchants/#{@merchant.id}" %></li>
     <li><%= link_to 'My items', merchant_items_path((@merchant)) %></li>
     <li><%= link_to 'My invoices', merchant_invoices_path((@merchant)) %></li>
+    <li><%= link_to "My Coupons", merchant_coupons_path(@merchant) %></li>
   </ul>
 </nav>
 
-<%= link_to "My Items", merchant_items_path(@merchant) %>
-<%= link_to "My Invoices", merchant_invoices_path(@merchant) %>
-<%= link_to "My Coupons", merchant_coupons_path(@merchant) %>
 <h3>Top 5 Customers</h3>
 <ol>
   <% @merchant.top_5_customers.each do |customer| %>

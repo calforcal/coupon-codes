@@ -14,4 +14,12 @@ class Coupon < ApplicationRecord
   def pending_invoices?
     invoices.where("invoices.status = 2").any?
   end
+
+  def self.activated_coupons
+    where('status = 0')
+  end
+
+  def self.deactivated_coupons
+    where('status = 1')
+  end
 end

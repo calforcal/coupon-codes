@@ -13,18 +13,7 @@ Rails.application.routes.draw do
     resources :coupons, only: [:index, :new, :create, :show, :update], controller: "merchants/coupons"
   end
 
-  # get "/merchants/:id/items", to: "merchants/items#index"
-  # get "/merchants/:id/items/new", to: "merchants/items#new"
-  # post "/merchants/:id/items", to: "merchants/items#create"
-  # get "/merchants/:id/items/:id", to: "merchants/items#show"
-  # get "/merchants/:id/items/:id/edit", to: "merchants/items#edit"
-  # patch "/merchants/:id/items/:id", to: "merchants/items#update"
-
-  # get "/merchants/:id/invoices", to: "merchants/invoices#index"
-  # get "/merchants/:id/invoices/:id", to: "merchants/invoices#show"
-
   resources :invoice_items, only: [:update]
-  # patch "/invoice_items/:id", to: "invoice_items#update"
 
   get "/admin", to: "admin/dashboards#welcome"
 

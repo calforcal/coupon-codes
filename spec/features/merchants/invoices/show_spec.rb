@@ -8,8 +8,10 @@ RSpec.describe "Merchant Invoices Show Page" do
     @merchant_1 = create(:merchant)
     @merchant_2 = create(:merchant)
 
+    @coupon_1 = @merchant_1.coupons.create!(name: "50% off", code: "GET50", coupon_type: 0, status: 0, money_off: 50)
+
     @invoice_1 = create(:invoice, customer_id: @customer1.id)
-    @invoice_2 = create(:invoice, customer_id: @customer2.id)
+    @invoice_2 = create(:invoice, customer_id: @customer2.id, coupon_id: @coupon_1.id)
 
     @item_1 = create(:item, merchant_id: @merchant_1.id)
     @item_2 = create(:item, merchant_id: @merchant_1.id)
@@ -22,6 +24,7 @@ RSpec.describe "Merchant Invoices Show Page" do
     @invoice_item_3 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_3.id)
     @invoice_item_4 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_4.id)
     @invoice_item_5 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_5.id)
+
   end
   describe "As a merchant" do
     it "displays information for a single invoice" do
@@ -66,19 +69,29 @@ RSpec.describe "Merchant Invoices Show Page" do
     end
 
     it "displays the total revenue for an invoice" do
-      # visit "/merchants/#{@merchant_1.id}/invoices/#{@invoice_1.id}"
       visit merchant_invoice_path(@merchant_1, @invoice_1)
 
       within("#invoice_info") do
         expect(page).to have_content("Revenue: $#{sprintf('%.2f', @invoice_1.revenue)}")
       end
 
-      # visit "/merchants/#{@merchant_1.id}/invoices/#{@invoice_2.id}"
       visit merchant_invoice_path(@merchant_1, @invoice_2)
 
 
       within("#invoice_info") do
         expect(page).to have_content("Revenue: $#{sprintf('%.2f', @invoice_2.revenue)}")
+      end
+    end
+
+    it "displays the subtotal, grand total and the name / code of coupon used (as a link)" do
+      visit merchant_invoice_path(@merchant_1, @invoice_2)
+
+      within ".payment-info" do
+        expect(page).to have_content("Subtotal: $#{sprintf('%.2f', @invoice_2.revenue)}")
+        expect(page).to have_content("Grand Total: $#{sprintf('%.2f', @invoice_2.grand_total)}")
+        expect(page).to have_content("Coupon Used:")
+        expect(page).to have_link("#{@coupon_1.name}")
+        expect(page).to have_content("Coupon Code: #{@coupon_1.code}")
       end
     end
 

@@ -18,8 +18,10 @@ RSpec.describe Invoice, type: :model do
     @customer = create(:customer)
 
     @merchant = create(:merchant)
+    @coupon_1 = @merchant.coupons.create!(name: "50% off", code: "GET50", coupon_type: 0, status: 0, money_off: 50)
 
-    @invoice_1 = create(:invoice, customer_id: @customer.id, status: 1)
+
+    @invoice_1 = create(:invoice, customer_id: @customer.id, status: 1, coupon_id: @coupon_1.id)
     @invoice_2 = create(:invoice, customer_id: @customer.id, status: 1)
     @invoice_3 = create(:invoice, customer_id: @customer.id, status: 1)
     @invoice_4 = create(:invoice, customer_id: @customer.id, status: 1)
@@ -40,6 +42,12 @@ RSpec.describe Invoice, type: :model do
       it "returns the total revenue for a single invoice" do
         expect(@invoice_1.revenue).to eq(2961)
         expect(@invoice_2.revenue).to eq(156)
+      end
+
+      it "applies a coupons discount to the total revenue" do
+        expect(@invoice_1.revenue).to eq(2961)
+
+        expect(@invoice_1.grand_total).to eq(1480.5) 
       end
     end
   end

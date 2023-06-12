@@ -23,9 +23,9 @@ class Merchants::CouponsController < ApplicationController
     elsif params[:status] == "0"
       @coupon.update(status: 0)
       redirect_to merchant_coupon_path(@merchant, @coupon)
-    elsif @coupon.update(coupon_params)
-      redirect_to merchant_coupon_path(@merchant, @coupon)
-      flash[:notice] = "Coupon #{@coupon.id} has been successfully updated"
+    # elsif @coupon.update(coupon_params)
+    #   redirect_to merchant_coupon_path(@merchant, @coupon)
+    #   flash[:notice] = "Coupon #{@coupon.id} has been successfully updated"
     end
   end
 
@@ -43,9 +43,9 @@ class Merchants::CouponsController < ApplicationController
       elsif coupon.code == Coupon.find_by(code: coupon.code).code
         redirect_to new_merchant_coupon_path(merchant)
         flash[:alert] = "Code already is use"
-      else
-        redirect_to new_merchant_coupon_path(merchant)
-        flash[:alert] = "Please fill out all fields"
+      # else
+      #   redirect_to new_merchant_coupon_path(merchant)
+      #   flash[:alert] = "Please fill out all fields"
       end
     elsif merchant.total_active_coupons >= 5
       redirect_to new_merchant_coupon_path(merchant)

@@ -19,10 +19,11 @@ RSpec.describe Invoice, type: :model do
 
     @merchant = create(:merchant)
     @coupon_1 = @merchant.coupons.create!(name: "50% off", code: "GET50", coupon_type: 0, status: 0, money_off: 50)
+    @coupon_2 = @merchant.coupons.create!(name: "$10 off", code: "GET10", coupon_type: 1, status: 0, money_off: 1000)
 
 
     @invoice_1 = create(:invoice, customer_id: @customer.id, status: 1, coupon_id: @coupon_1.id)
-    @invoice_2 = create(:invoice, customer_id: @customer.id, status: 1)
+    @invoice_2 = create(:invoice, customer_id: @customer.id, status: 1, coupon_id: @coupon_2.id)
     @invoice_3 = create(:invoice, customer_id: @customer.id, status: 1)
     @invoice_4 = create(:invoice, customer_id: @customer.id, status: 1)
 
@@ -33,7 +34,7 @@ RSpec.describe Invoice, type: :model do
 
     @invoice_item_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, unit_price: 1080, quantity: 2, status:1)
     @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_2.id, unit_price: 267, quantity: 3, status:1)
-    @invoice_item_3 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_3.id, unit_price: 32, quantity: 1, status:1)
+    @invoice_item_3 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_3.id, unit_price: 3200, quantity: 1, status:1)
     @invoice_item_4 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_4.id, unit_price: 124, quantity: 1, status:1)
   end
 
@@ -41,13 +42,17 @@ RSpec.describe Invoice, type: :model do
     describe "#revenue" do
       it "returns the total revenue for a single invoice" do
         expect(@invoice_1.revenue).to eq(2961)
-        expect(@invoice_2.revenue).to eq(156)
+        expect(@invoice_2.revenue).to eq(3324)
       end
 
       it "applies a coupons discount to the total revenue" do
         expect(@invoice_1.revenue).to eq(2961)
 
         expect(@invoice_1.grand_total).to eq(1480.5) 
+
+        expect(@invoice_2.grand_total).to eq(2324)
+
+        expect(@invoice_3.grand_total).to eq(@invoice_3.revenue)
       end
     end
   end

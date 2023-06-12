@@ -8,6 +8,11 @@
   </ul>
 </nav>
 
+<h2>Upcoming Holidays</h2>
+<% @holidays.each do |holiday| %>
+  <%= "#{holiday.name}, #{holiday.date}" %></br>
+<% end %>
+</br>
 <%= link_to "Create a New Coupon", new_merchant_coupon_path(@merchant) %>
 
 <div class="active-coupons">

@@ -33,6 +33,8 @@ system("rails csv_load:all")
 @invoice_1 = @customer_1.invoices.create!(status: 1, coupon_id: @coupon_1.id)
 @invoice_item_1 = InvoiceItem.create!(quantity: 2, unit_price: 50000, status: 1, invoice_id: @invoice_1.id, item_id: @item_1.id)
 @invoice_item_2 = InvoiceItem.create!(quantity: 5, unit_price: 123456789, status: 1, invoice_id: @invoice_1.id, item_id: @item_2.id)
+@transaction_1 = @invoice_1.transactions.create!(credit_card_number: "4147202434567890", result: 0)
 
 @invoice_2 = @customer_1.invoices.create!(status: 1, coupon_id: @coupon_3.id)
 @invoice_item_3 = InvoiceItem.create!(quantity: 1, unit_price: 1000000000, status: 1, invoice_id: @invoice_2.id, item_id: @item_3.id)
+@transaction_2 = @invoice_2.transactions.create!(credit_card_number: "4147202434567890", result: 0)

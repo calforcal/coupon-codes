@@ -26,7 +26,7 @@ class Invoice < ApplicationRecord
       revenue
     elsif coupon.coupon_type == "percent"
       discount = 1 - coupon.money_off.to_f / 100
-      (revenue - (revenue * discount)).round(2)
+      (revenue * discount).round(2)
     elsif coupon.coupon_type == "dollars"
       (revenue - coupon.money_off / 100).round(2)
     end

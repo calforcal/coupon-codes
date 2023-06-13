@@ -5,6 +5,7 @@
     <li><%= link_to 'Dashboard', "/merchants/#{@merchant.id}" %></li>
     <li><%= link_to 'My items', merchant_items_path((@merchant)) %></li>
     <li><%= link_to 'My invoices', merchant_invoices_path((@merchant)) %></li>
+    <li><%= link_to 'My coupons', merchant_coupons_path((@merchant)) %></li>
   </ul>
 </nav>
 
@@ -29,7 +30,7 @@
 <div class="top-five-items">
   <h4>Top 5 Items</h4>
   <ol>
-    <% @items.top_5_items_by_revenue.each do |item| %>
+    <% @merchant.items.top_5_items_by_revenue.each do |item| %>
         <li><%= link_to "#{item.name}", "/merchants/#{@merchant.id}/items/#{item.id}" %> <%=" - #{number_to_currency(item.total_revenue / 100, unit: "$", separator: ".", delimiter: ",")} in sales" %></li>
         <p>Top selling date for <%= item.name %> was <%= item.best_day %></p>
     <% end %>

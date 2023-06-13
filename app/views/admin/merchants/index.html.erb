@@ -1,6 +1,9 @@
 <div class="admin_dashboard_header">
   <h2>Admin Dashboard</h2>
 </div>
+
+
+<h1>Admin Merchants</h1>
 <nav class="admin_dashboard_nav_bar">
   <ul>
     <li><%= link_to 'Dashboard', '/admin'%></li>
@@ -8,10 +11,6 @@
     <li><%= link_to 'Invoices', '/admin/invoices' %></li>
   </ul>
 </nav>
-
-
-<h1>Admin Merchants</h1>
-
 <%= link_to "Create New Merchant", new_admin_merchant_path, method: :get %>
 
 
@@ -37,5 +36,7 @@
 <ol>
 <% @merchants.top_5_by_revenue.each do |merchant| %>
   <li><%= link_to "#{merchant.name}", admin_merchant_path(merchant) %> <%=" - #{number_to_currency(merchant.revenue / 100, unit: "$", separator: ".", delimiter: ",")} in sales" %></li>
-  <p><%= "Top Day for #{merchant.name} was #{merchant.best_day}" %></p>
+  <%= "Top Day for #{merchant.name} was #{merchant.best_day}" %></br>
 <% end %>
+</ol>
+</div>

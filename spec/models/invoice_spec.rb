@@ -41,16 +41,16 @@ RSpec.describe Invoice, type: :model do
   describe "instance methods" do
     describe "#revenue" do
       it "returns the total revenue for a single invoice" do
-        expect(@invoice_1.revenue).to eq(2961)
-        expect(@invoice_2.revenue).to eq(3324)
+        expect(@invoice_1.revenue).to eq(29.61)
+        expect(@invoice_2.revenue).to eq(33.24)
       end
 
       it "applies a coupons discount to the total revenue" do
-        expect(@invoice_1.revenue).to eq(2961)
+        expect(@invoice_1.revenue).to eq(29.61)
 
-        expect(@invoice_1.grand_total).to eq(1480.5) 
+        expect(@invoice_1.grand_total).to eq(14.81) 
 
-        expect(@invoice_2.grand_total).to eq(2324)
+        expect(@invoice_2.grand_total).to eq(23.24)
 
         expect(@invoice_3.grand_total).to eq(@invoice_3.revenue)
       end

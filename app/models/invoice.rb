@@ -18,17 +18,17 @@ class Invoice < ApplicationRecord
   
   #instance methods
   def revenue
-    invoice_items.sum("unit_price * quantity")
+    (invoice_items.sum("unit_price * quantity") / 100.0).round(2)
   end
 
   def grand_total
     if coupon == nil
       revenue
     elsif coupon.coupon_type == "percent"
-      discount = coupon.money_off.to_f / 100
-      revenue - (revenue * discount)
+      discount = 1 - coupon.money_off.to_f / 100
+      (revenue - (revenue * discount)).round(2)
     elsif coupon.coupon_type == "dollars"
-      revenue - coupon.money_off
+      (revenue - coupon.money_off / 100).round(2)
     end
   end
 end

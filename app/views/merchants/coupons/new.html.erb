@@ -22,7 +22,7 @@
   <%= form.select :coupon_type, ["percent", "dollars"] %></br>
 
   <%= form.label :money_off, "Money Off:" %>
-  <%= form.number_field :money_off, max: 10000000000 %></br>
+  <%= form.number_field :money_off, in: 1..10000000000 %></br>
 
   <%= form.submit "Create Coupon" %></br>
 <% end %>

@@ -21,6 +21,7 @@ RSpec.describe Invoice, type: :model do
     @coupon_1 = @merchant.coupons.create!(name: "50% off", code: "GET50", coupon_type: 0, status: 0, money_off: 50)
     @coupon_2 = @merchant.coupons.create!(name: "$10 off", code: "GET10", coupon_type: 1, status: 0, money_off: 1000)
 
+    @merchant_2 = create(:merchant)
 
     @invoice_1 = create(:invoice, customer_id: @customer.id, status: 1, coupon_id: @coupon_1.id)
     @invoice_2 = create(:invoice, customer_id: @customer.id, status: 1, coupon_id: @coupon_2.id)
@@ -31,11 +32,15 @@ RSpec.describe Invoice, type: :model do
     @item_2 = create(:item, merchant_id: @merchant.id)
     @item_3 = create(:item, merchant_id: @merchant.id)
     @item_4 = create(:item, merchant_id: @merchant.id)
+    @item_5 = create(:item, merchant_id: @merchant_2.id)
 
     @invoice_item_1 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_1.id, unit_price: 1080, quantity: 2, status:1)
     @invoice_item_2 = create(:invoice_item, invoice_id: @invoice_1.id, item_id: @item_2.id, unit_price: 267, quantity: 3, status:1)
     @invoice_item_3 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_3.id, unit_price: 3200, quantity: 1, status:1)
     @invoice_item_4 = create(:invoice_item, invoice_id: @invoice_2.id, item_id: @item_4.id, unit_price: 124, quantity: 1, status:1)
+
+    @invoice_5 = create(:invoice, customer_id: @customer.id, status: 1, coupon_id: @coupon_1.id)
+    @invoice_item_5 = create(:invoice_item, invoice_id: @invoice_5.id, item_id: @item_5.id, unit_price: 1080, quantity: 2, status:1)
   end
 
   describe "instance methods" do
@@ -53,6 +58,16 @@ RSpec.describe Invoice, type: :model do
         expect(@invoice_2.grand_total).to eq(23.24)
 
         expect(@invoice_3.grand_total).to eq(@invoice_3.revenue)
+      end
+
+      it "returns 0 if the discount is more than item cost" do
+        @coupon_2.update(money_off: 10000)
+
+        expect(@invoice_2.grand_total).to eq(0)
+      end
+
+      it "will not apply the discount if the item doesn't belong to the merchant with the coupon" do
+        expect(@invoice_5.grand_total).to eq(@invoice_5.revenue)
       end
     end
   end

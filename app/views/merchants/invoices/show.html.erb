@@ -1,14 +1,14 @@
 
 <section id="links">
 <h2> <%= @merchant.name %></h2>
-  <nav>
-    <ul>
-      <li><%= link_to 'Dashboard', "/merchants/#{@merchant.id}" %></li>
-      <li><%= link_to 'My items', merchant_items_path((@merchant)) %></li>
-      <li><%= link_to 'My invoices', merchant_invoices_path((@merchant)) %></li>
-      <li><%= link_to "My Coupons", merchant_coupons_path(@merchant) %></li>
-    </ul>
-  </nav>
+<nav>
+  <ul>
+    <li><%= link_to 'Dashboard', "/merchants/#{@merchant.id}" %></li>
+    <li><%= link_to 'My items', merchant_items_path((@merchant)) %></li>
+    <li><%= link_to 'My invoices', merchant_invoices_path((@merchant)) %></li>
+    <li><%= link_to 'My coupons', merchant_coupons_path((@merchant)) %></li>
+  </ul>
+</nav>
 </section>
 
 <section id="invoice_info">
